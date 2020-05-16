@@ -33,10 +33,15 @@ class Mapper(Base):
     @staticmethod
     def add(tgid, ethaddress):
         s = Session()
-        s.add(Mapper(
-            tgid=tgid,
-            ethaddress=ethaddress
-        ))
+        res = s.query(Mapper).filter(Mapper.tgid == tgid).first()
+        if not res:
+            s.add(Mapper(
+                tgid=tgid,
+                ethaddress=ethaddress
+            ))
+        else:
+            res.ethaddress = ethaddress
+
         try:
             s.commit()
             return True
